@@ -581,7 +581,9 @@
   </div>
 
   <script>
-  const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwaQLYwFvrGnv4jP2rXlnBoqhtY2EyWts-GAotYu6ZX3LrGtT3Ci_Qu4ikszlUg3rOn/exec";
+  const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycby5pl9s25eJcGIM3FIGh19NZNbzTYw6vo0jPKzmke71Kf5wNe4V2IzV4PnAfwg2TLjZ/exec";
+
+  let sending = false; // 🔒 trava pra não enviar duas vezes
 
   function showToast(title, msg){
     const toast = document.getElementById("toast");
@@ -591,25 +593,27 @@
     setTimeout(() => toast.classList.remove("show"), 5200);
   }
 
- async function sendToSheet(payload){
-  try{
-    const body = new URLSearchParams(payload).toString();
-
-    const res = await fetch(SHEET_WEBAPP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-      body
-    });
-
-    const data = await res.json();
-    return data && data.ok === true;
-  }catch(e){
-    console.error(e);
-    return false;
+  async function sendToSheet(payload){
+    try{
+      await fetch(SHEET_WEBAPP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      return true;
+    }catch(e){
+      return false;
+    }
   }
-}
 
   async function confirmar(vai){
+    // Se já estiver enviando, bloqueia clique duplo
+    if(sending){
+      showToast("⏳ Aguarde...", "Sua confirmação já está sendo enviada.");
+      return;
+    }
+
     const nome = document.getElementById("nome").value.trim();
     const tel = document.getElementById("telefone").value.trim();
 
@@ -618,6 +622,12 @@
       document.getElementById("nome").focus();
       return;
     }
+
+    sending = true;
+
+    // Desabilita botões
+    const buttons = document.querySelectorAll(".actions button");
+    buttons.forEach(btn => btn.disabled = true);
 
     const payload = {
       nome: nome,
@@ -629,12 +639,19 @@
 
     const ok = await sendToSheet(payload);
 
+    // Limpa campos apenas se enviou
     if(ok){
-      showToast("✅ Registrado!", "Sua confirmação foi salva. Obrigado! 💛");
       document.getElementById("rsvpForm").reset();
+      showToast("✅ Enviado!", "Obrigado! Sua confirmação foi registrada. 💛");
     }else{
-      showToast("⚠️ Erro", "Não consegui registrar. Tente novamente.");
+      showToast("⚠️ Erro", "Não consegui enviar agora. Tente novamente.");
     }
+
+    // Reabilita botões depois de 2 segundos (evita spam)
+    setTimeout(() => {
+      sending = false;
+      buttons.forEach(btn => btn.disabled = false);
+    }, 2000);
   }
 </script>
 
