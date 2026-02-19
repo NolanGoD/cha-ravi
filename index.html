@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chá de Fraldas • Ravi • Confirmar Presença</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f6efe6;
+      --paper: #fbf7f2;
+      --ink: #5b4636;
+      --muted: #8a6f5c;
+      --brown: #6a4b38;
+      --brown2:#7a5a46;
+      --shadow: 0 18px 50px rgba(54, 39, 28, .18);
+      --ring: rgba(106, 75, 56, .25);
+      --star: #e9d5c7;
+      --cloud1:#b58a6c;
+      --cloud2:#8a5d43;
+      --balloon1:#d0b197;
+      --balloon2:#b07e5f;
+      --ok:#2f7d57;
+      --no:#9b3d3d;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(176,126,95,.18), transparent 60%),
+        radial-gradient(900px 500px at 10% 20%, rgba(208,177,151,.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(208,177,151,.22), transparent 60%),
+        var(--bg);
+      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+      pointer-events:none;
+      mix-blend-mode:multiply;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 16px 54px;
+      position:relative;
+    }
+
+    .floaty{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .cloud{
+      position:absolute;
+      width:min(520px, 60vw);
+      height:auto;
+      opacity:.18;
+      filter: blur(.2px);
+      animation: drift linear infinite;
+    }
+    .cloud.c1{ top:30px; left:-160px; animation-duration: 46s; }
+    .cloud.c2{ top:90px; right:-200px; animation-duration: 58s; animation-direction: reverse; opacity:.14;}
+    .cloud.c3{ bottom:120px; left:-220px; animation-duration: 64s; opacity:.12;}
+
+    @keyframes drift{
+      from{ transform:translateX(0) translateY(0); }
+      50%{ transform:translateX(70vw) translateY(8px); }
+      to{ transform:translateX(130vw) translateY(0); }
+    }
+
+    .star{
+      position:absolute;
+      width:14px; height:14px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--star) 55%, rgba(233,213,199,0) 70%);
+      border-radius:50%;
+      opacity:.9;
+      animation: twinkle 2.6s ease-in-out infinite;
+      filter: drop-shadow(0 6px 10px rgba(106,75,56,.18));
+    }
+    @keyframes twinkle{
+      0%,100%{ transform:scale(1); opacity:.65 }
+      50%{ transform:scale(1.35); opacity:1 }
+    }
+
+    .balloon{
+      position:absolute;
+      width:72px; height:90px;
+      border-radius: 60% 60% 55% 55%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.65), transparent 38%),
+                  linear-gradient(180deg, var(--balloon1), var(--balloon2));
+      box-shadow: 0 18px 30px rgba(54,39,28,.15);
+      opacity:.35;
+      animation: float 5.5s ease-in-out infinite;
+    }
+    .balloon::after{
+      content:"";
+      position:absolute;
+      width:2px; height:120px;
+      left:50%; top:88px;
+      background: rgba(91,70,54,.25);
+      transform:translateX(-50%);
+    }
+    .balloon.b1{ left:18px; top:140px; animation-duration: 6.2s;}
+    .balloon.b2{ right:26px; top:170px; animation-duration: 6.9s; opacity:.28}
+    @keyframes float{
+      0%,100%{ transform: translateY(0) }
+      50%{ transform: translateY(-16px) }
+    }
+
+    .card{
+      width:min(980px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.55));
+      border: 1px solid rgba(106,75,56,.14);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .frame{
+      position:absolute; inset:0;
+      border-radius: 28px;
+      pointer-events:none;
+      box-shadow: inset 0 0 0 2px rgba(208,177,151,.22);
+    }
+
+    .header{
+      padding: 34px 22px 18px;
+      text-align:center;
+      position:relative;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(176,126,95,.10);
+      border: 1px solid rgba(106,75,56,.14);
+      color: var(--muted);
+      font-family: "Cormorant Garamond", serif;
+      letter-spacing:.5px;
+      font-weight:600;
+    }
+
+    .title{
+      margin:14px 0 6px;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(52px, 7vw, 84px);
+      color: var(--brown);
+      line-height: 1;
+      text-shadow: 0 10px 18px rgba(54,39,28,.12);
+    }
+    .subtitle{
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(18px, 2.2vw, 22px);
+      color: var(--muted);
+    }
+
+    .message{
+      margin: 14px auto 0;
+      max-width: 720px;
+      padding: 0 10px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 20px;
+      color: rgba(91,70,54,.9);
+      line-height:1.35;
+    }
+
+    .bear{
+      width: 130px;
+      margin: 18px auto 0;
+      display:block;
+      animation: bearBounce 3.2s ease-in-out infinite;
+      filter: drop-shadow(0 20px 30px rgba(54,39,28,.15));
+      transform-origin: 50% 80%;
+    }
+    @keyframes bearBounce{
+      0%,100%{ transform: translateY(0) rotate(-1deg) }
+      50%{ transform: translateY(-10px) rotate(1deg) }
+    }
+
+    .content{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      padding: 18px 22px 22px;
+    }
+
+    @media (max-width: 900px){
+      .content{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      background: rgba(251,247,242,.72);
+      border: 1px solid rgba(106,75,56,.12);
+      border-radius: 22px;
+      padding: 18px 16px;
+    }
+
+    .panel h3{
+      margin: 0 0 10px;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      letter-spacing:.3px;
+      color: var(--brown2);
+      font-size: 22px;
+    }
+
+    .infoGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 520px){
+      .infoGrid{ grid-template-columns: 1fr; }
+    }
+
+    .pill{
+      padding: 12px 12px;
+      border-radius: 18px;
+      background: rgba(208,177,151,.15);
+      border: 1px solid rgba(106,75,56,.12);
+    }
+    .pill .k{
+      font-size: 12px;
+      letter-spacing: .18em;
+      color: rgba(91,70,54,.7);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .pill .v{
+      margin-top: 6px;
+      font-family:"Cormorant Garamond", serif;
+      font-size: 20px;
+      color: var(--ink);
+      font-weight: 700;
+      line-height:1.1;
+    }
+    .pill .small{
+      margin-top: 4px;
+      color: rgba(91,70,54,.78);
+      font-size: 14px;
+      font-weight:600;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(106,75,56,.14);
+      margin: 14px 0;
+    }
+
+    .form{
+      display:grid;
+      gap: 12px;
+    }
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width:520px){ .row2{ grid-template-columns:1fr } }
+
+    label{
+      display:block;
+      font-size: 13px;
+      color: rgba(91,70,54,.78);
+      margin: 0 0 6px;
+      font-weight: 700;
+      letter-spacing:.04em;
+    }
+    input, textarea{
+      width:100%;
+      border-radius: 16px;
+      border: 1px solid rgba(106,75,56,.18);
+      padding: 12px 12px;
+      background: rgba(255,255,255,.8);
+      outline:none;
+      color: var(--ink);
+      font: inherit;
+      box-shadow: 0 0 0 0 var(--ring);
+      transition: box-shadow .2s ease, transform .08s ease;
+    }
+    input:focus, textarea:focus{
+      box-shadow: 0 0 0 5px var(--ring);
+    }
+    textarea{ min-height: 92px; resize: vertical; }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .btn{
+      appearance:none;
+      border: 0;
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+      box-shadow: 0 14px 26px rgba(54,39,28,.14);
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px) scale(.99); filter:saturate(.98); }
+
+    .btn.ok{
+      background: linear-gradient(180deg, rgba(47,125,87,.98), rgba(35,103,71,.98));
+      color:#fff;
+    }
+    .btn.no{
+      background: linear-gradient(180deg, rgba(155,61,61,.98), rgba(122,44,44,.98));
+      color:#fff;
+    }
+    .btn.ghost{
+      background: rgba(176,126,95,.14);
+      color: var(--brown2);
+      border: 1px solid rgba(106,75,56,.18);
+      box-shadow:none;
+      font-weight: 800;
+    }
+
+    .hint{
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: rgba(91,70,54,.72);
+      line-height:1.35;
+    }
+
+    .mapWrap{
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(106,75,56,.14);
+      background: rgba(255,255,255,.75);
+    }
+    iframe{
+      width:100%;
+      height: 320px;
+      border:0;
+      display:block;
+    }
+
+    .footer{
+      padding: 0 22px 22px;
+      display:grid;
+      gap: 14px;
+    }
+
+    .gift{
+      text-align:center;
+      padding: 14px 12px;
+      border-radius: 20px;
+      background: rgba(208,177,151,.14);
+      border: 1px solid rgba(106,75,56,.12);
+    }
+    .gift .t{
+      font-family:"Cormorant Garamond", serif;
+      font-weight:700;
+      font-size: 20px;
+      color: var(--brown2);
+      margin-bottom: 4px;
+    }
+    .gift .it{
+      font-weight:800;
+      color: rgba(91,70,54,.9);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(30px);
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(106,75,56,.18);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 16px 40px rgba(54,39,28,.18);
+      opacity:0;
+      pointer-events:none;
+      transition: .25s ease;
+      width:min(560px, calc(100% - 24px));
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .dot{
+      width:12px; height:12px; border-radius:50%;
+      margin-top: 4px;
+      background: var(--brown);
+      box-shadow:  0 0 0 5px rgba(106,75,56,.12);
+      flex:0 0 auto;
+    }
+    .toast b{ display:block; margin-bottom:2px; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="floaty" aria-hidden="true">
+      <svg class="cloud c1" viewBox="0 0 700 220">
+        <path fill="var(--cloud2)" d="M145 170c-45 0-82-30-82-67 0-33 28-61 66-66 13-33 50-57 93-57 52 0 95 34 101 78 6-1 13-2 20-2 45 0 82 30 82 67 0 37-37 67-82 67H145z"/>
+      </svg>
+      <svg class="cloud c2" viewBox="0 0 700 220">
+        <path fill="var(--cloud1)" d="M130 170c-47 0-86-30-86-68 0-34 30-63 70-66 14-34 52-58 98-58 55 0 100 34 107 79 6-1 13-2 20-2 47 0 86 30 86 68 0 38-39 68-86 68H130z"/>
+      </svg>
+
+      <div class="balloon b1"></div>
+      <div class="balloon b2"></div>
+
+      <div class="star" style="left:10%; top:18%; animation-delay:.2s"></div>
+      <div class="star" style="left:22%; top:12%; animation-delay:1.1s"></div>
+      <div class="star" style="left:84%; top:14%; animation-delay:.5s"></div>
+      <div class="star" style="left:76%; top:25%; animation-delay:1.5s"></div>
+      <div class="star" style="left:16%; top:70%; animation-delay:.9s"></div>
+      <div class="star" style="left:88%; top:76%; animation-delay:1.9s"></div>
+    </div>
+
+    <main class="card">
+      <div class="frame"></div>
+
+      <header class="header">
+        <div class="badge">☁️ Chá de Fraldas</div>
+        <h1 class="title">Ravi</h1>
+        <p class="subtitle">Confirmação de Presença</p>
+
+        <p class="message">
+          Nosso maior amor está prestes a chegar, e nada tornaria esse momento ainda mais especial do que ter você ao nosso lado. 💛
+        </p>
+
+        <svg class="bear" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="55" cy="55" r="22" fill="#a97b5f"/>
+          <circle cx="145" cy="55" r="22" fill="#a97b5f"/>
+          <circle cx="55" cy="55" r="12" fill="#d0b197"/>
+          <circle cx="145" cy="55" r="12" fill="#d0b197"/>
+          <circle cx="100" cy="100" r="70" fill="#a97b5f"/>
+          <circle cx="100" cy="118" r="45" fill="#d0b197"/>
+          <circle cx="78" cy="90" r="10" fill="#2f221a"/>
+          <circle cx="122" cy="90" r="10" fill="#2f221a"/>
+          <circle cx="75" cy="86" r="4" fill="#fff"/>
+          <circle cx="119" cy="86" r="4" fill="#fff"/>
+          <ellipse cx="100" cy="110" rx="18" ry="14" fill="#d0b197"/>
+          <circle cx="100" cy="110" r="6" fill="#2f221a"/>
+          <path d="M100 116c8 8 18 8 26 0" stroke="#2f221a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+      </header>
+
+      <section class="content">
+        <div class="panel">
+          <h3>📅 Informações do Chá</h3>
+
+          <div class="infoGrid">
+            <div class="pill">
+              <div class="k">Dia</div>
+              <div class="v">Sábado</div>
+              <div class="small">14 de Março</div>
+            </div>
+
+            <div class="pill">
+              <div class="k">Horário</div>
+              <div class="v">15:30</div>
+              <div class="small">Aguardamos você 💛</div>
+            </div>
+
+            <div class="pill">
+              <div class="k">Endereço</div>
+              <div class="v">Av. Betonex, 75</div>
+              <div class="small">Guarituba</div>
+            </div>
+
+            <div class="pill">
+              <div class="k">Confirmação</div>
+              <div class="v">Até 05/03</div>
+              <div class="small">Ajuda muito a organização</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3>🧸 Confirmar Presença</h3>
+
+          <form class="form" id="rsvpForm">
+            <div class="row2">
+              <div>
+                <label for="nome">Nome</label>
+                <input id="nome" name="nome" placeholder="Ex: Oriel Rodrigo" required>
+              </div>
+
+              <div>
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input id="telefone" name="telefone" placeholder="(41) 99999-9999">
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="button" class="btn ok" onclick="confirmar(true)">
+                ✅ Vou sim!
+              </button>
+
+              <button type="button" class="btn no" onclick="confirmar(false)">
+                ❌ Não vou conseguir ir
+              </button> 
+            </div>
+
+            <p class="hint">
+              Após confirmar, sua presença será notificada automaticamente para os meus papais✨.
+            </p>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h3>📍 Localização</h3>
+          <p style="margin-top:0;color:rgba(91,70,54,.78);line-height:1.35;">
+            Caso queira abrir no GPS, o mapa está logo abaixo.
+          </p>
+
+          <div class="mapWrap">
+            <iframe
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Av.%20Betonex,%2075%20Guarituba&output=embed">
+            </iframe>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn ghost" style="text-decoration:none;" target="_blank"
+               href="https://www.google.com/maps?q=Av.+Betonex,+75+Guarituba">
+              🗺️ Abrir no Google Maps
+            </a>
+
+            <a class="btn ghost" style="text-decoration:none;" target="_blank"
+               href="https://www.waze.com/ul?q=Av.%20Betonex%2075%20Guarituba">
+              🚗 Abrir no Waze
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+
+        <div style="text-align:center;color:rgba(91,70,54,.7);font-size:13px;">
+          Feito com carinho para o Chá do Ravi ☁️🧸✨
+        </div>
+      </footer>
+    </main>
+
+    <div class="toast" id="toast">
+      <div class="dot"></div>
+      <div id="toastText"></div>
+    </div>
+  </div>
+
+  <script>
+  const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycby58hTEKiN-0tv6Cyr5ViKupVU5zd_fa7rMWDKojuj-q1Tl0OCMxZ6VZc1RKK06DMh6/exec";
+
+  function showToast(title, msg){
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    toastText.innerHTML = `<b>${title}</b>${msg}`;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 5200);
+  }
+
+  async function sendToSheet(payload){
+    try{
+      await fetch(SHEET_WEBAPP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  async function confirmar(vai){
+    const nome = document.getElementById("nome").value.trim();
+    const tel = document.getElementById("telefone").value.trim();
+
+    if(!nome){
+      showToast("⚠️ Falta o nome!", "Por favor preencha seu nome antes de confirmar.");
+      document.getElementById("nome").focus();
+      return;
+    }
+
+    const payload = {
+      nome: nome,
+      numero: tel,
+      resposta: vai ? "SIM" : "NAO"
+    };
+
+    showToast("⏳ Enviando...", "Registrando sua resposta...");
+
+    const ok = await sendToSheet(payload);
+
+    if(ok){
+      showToast("✅ Registrado!", "Sua confirmação foi salva. Obrigado! 💛");
+    }else{
+      showToast("⚠️ Erro", "Não consegui registrar. Tente novamente.");
+    }
+  }
+</script>
+
+</body>
+</html>
