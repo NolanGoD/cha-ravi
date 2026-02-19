@@ -626,12 +626,13 @@
 
     const ok = await sendToSheet(payload);
 
-    if(ok){
-      showToast("✅ Registrado!", "Sua confirmação foi salva. Obrigado! 💛");
-    }else{
-      showToast("⚠️ Erro", "Não consegui registrar. Tente novamente.");
-    }
-  }
+   if(ok){
+  showToast("✅ Registrado!", "Sua confirmação foi salva. Obrigado! 💛");
+
+  document.getElementById("rsvpForm").reset();
+}else{
+  showToast("⚠️ Erro", "Não consegui registrar. Tente novamente.");
+}
 </script>
 
 </body>
